@@ -1,3 +1,29 @@
+def get_page(url):
+    try:
+        if url == "http://www.udacity.com/cs101x/index.html":
+            return ('<html> <body> This is a test page for learning to crawl! '
+            '<p> It is a good idea to '
+            '<a href="http://www.udacity.com/cs101x/crawling.html">learn to '
+            'crawl</a> before you try to  '
+            '<a href="http://www.udacity.com/cs101x/walking.html">walk</a> '
+            'or  <a href="http://www.udacity.com/cs101x/flying.html">fly</a>. '
+            '</p> </body> </html> ')
+        elif url == "http://www.udacity.com/cs101x/crawling.html":
+            return ('<html> <body> I have not learned to crawl yet, but I '
+            'am quite good at '
+            '<a href="http://www.udacity.com/cs101x/kicking.html">kicking</a>.'
+            '</body> </html>')
+        elif url == "http://www.udacity.com/cs101x/walking.html":
+            return ('<html> <body> I cant get enough '
+            '<a href="http://www.udacity.com/cs101x/index.html">crawling</a>! '
+            '</body> </html>')
+        elif url == "http://www.udacity.com/cs101x/flying.html":
+            return ('<html> <body> The magic words are Squeamish Ossifrage! '
+            '</body> </html>')
+    except:
+        return ""
+    return ""
+
 def get_next_target(page):
 	start_link = page.find('<a href=')
 	if(start_link == -1):
@@ -7,13 +33,34 @@ def get_next_target(page):
 	url = page[start_quote + 1: end_quote]
 	return url, end_quote
 
-def print_all_links(page):
-	while True:
-		url, endpos = get_next_target(page)
-		if(url):
-			print(url)
-			page = page[endpos:]
-		else:
-			break
+def union(p,q):
+    for e in q:
+        if e not in p:
+            p.append(e)
 
-print_all_links('this is a <a href="test 1">link 1 </a> this is a <a href="test 2">link 2 </a>')
+def get_all_links(page):
+    links = []
+    while True:
+        url,endpos = get_next_target(page)
+        if url:
+            links.append(url)
+            page = page[endpos:]
+        else:
+            break
+    return links
+
+def crawl_web(seed,max_depth):
+    tocrawl = [seed]
+    crawled = []
+    next_depth = []
+    depth = 0
+    while tocrawl and depth <= max_depth: # we keep on the while as long as there is something tocrawl and the depth <= max_depth
+        page = tocrawl.pop()
+        if page not in crawled:
+            union(next_depth, get_all_links(get_page(page))) #We put the page into next_depth
+            crawled.append(page)
+        if not tocrawl: #if tocrawl is empty
+            tocrawl, next_depth = next_depth, []
+            depth = depth + 1
+    return crawled
+
