@@ -49,7 +49,7 @@ def get_all_links(page):
             break
     return links
 
-def crawl_web(seed,max_depth):
+def crawl_web(seed, max_depth):
     tocrawl = [seed]
     crawled = []
     next_depth = []
