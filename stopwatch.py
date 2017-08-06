@@ -13,4 +13,4 @@ def spin_loop(n):
     while i < n:
         i = i +1
 
-print(time_execution('spin_loop(10000)'))
+print(time_execution('spin_loop(10000)')[1])
