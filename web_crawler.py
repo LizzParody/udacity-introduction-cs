@@ -68,7 +68,7 @@ def crawl_web(seed, max_depth):
 def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
-    index = []
+    index = {}
     while tocrawl:
         page = tocrawl.pop()
         if page not in crawled:
@@ -84,16 +84,13 @@ def add_page_to_index(index, url, content):
         add_to_index(index, word, url)
 
 def add_to_index(index, keyword, url):
-    for entry in index:
-        if entry[0] == keyword:
-            entry[1].append(url)
-            return
-    # not found, add new keyword to index
-    index.append([keyword, [url]])
+    if keyword in index:
+        index[keyword].append(url)
+    else:
+        #not found, add new keyword to index
+        index[keyword] = url
 
 def lookup(index, keyword):
-    for entry in index:
-        if entry[0] == keyword:
-            return entry[1]
+    if keyword in index:
+        return index[keyword]
     return None
-
