@@ -65,18 +65,21 @@ def crawl_web(seed, max_depth):
             depth = depth + 1
     return crawled
 """
-def crawl_web(seed):
+def crawl_web(seed): # returns index, graph of outlinks
     tocrawl = [seed]
     crawled = []
+    graph = {}  # <url>:[list of pages it links to]
     index = {}
     while tocrawl:
         page = tocrawl.pop()
         if page not in crawled:
             content = get_page(page)
             add_page_to_index(index, page, content)
-            union(tocrawl, get_all_links(content))
+            outlinks = get_all_links(content)
+            graph[page] = outlinks
+            union(tocrawl, outlinks)
             crawled.append(page)
-    return index
+    return index, graph
 
 def add_page_to_index(index, url, content):
     words = content.split()
